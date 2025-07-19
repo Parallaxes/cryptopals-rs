@@ -10,7 +10,7 @@ pub fn run() -> bool {
     }
 }
 
-fn solve(hex_input: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let bytes = from_hex(hex_input)?;
+fn solve(input: &str) -> Result<String, Box<dyn std::error::Error>> {
+    let bytes = from_hex(input)?;
     Ok(to_base64(&bytes))
 }

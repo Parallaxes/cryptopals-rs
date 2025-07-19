@@ -1,7 +1,9 @@
+const BASE64_CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
 pub trait Serialize {
     fn to_bytes(&self) -> Vec<u8>;
     fn from_bytes(bytes: &[u8]) -> Result<Self, SerializeError>
-    where Self: Sized;
+        where Self: Sized;
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -33,7 +35,7 @@ pub fn from_hex(hex: &str) -> Result<Vec<u8>, SerializeError> {
     if hex.len() % 2 != 0 {
         return Err(SerializeError::InvalidLength);
     }
-
+    
     hex.chars()
         .collect::<Vec<_>>()
         .chunks(2)
@@ -43,4 +45,67 @@ pub fn from_hex(hex: &str) -> Result<Vec<u8>, SerializeError> {
                 .map_err(|_| SerializeError::InvalidFormat)
         })
         .collect()
+}
+
+pub fn to_base64(bytes: &[u8]) -> String {
+    let mut result = String::new();
+
+    for chunk in bytes.chunks(3) {
+        match chunk.len() {
+            3 => {
+                let b1 = chunk[0] as u32;
+                let b2 = chunk[1] as u32;
+                let b3 = chunk[2] as u32;
+
+                let combined = (b1 << 16) | (b2 << 8) | b3;
+
+                let idx1 = ((combined >> 18) & 0x3F) as usize;
+                let idx2 = ((combined >> 12) & 0x3F) as usize;
+                let idx3 = ((combined >> 6) & 0x3F) as usize;
+                let idx4 = (combined & 0x3F) as usize;
+
+                result.push(BASE64_CHARS[idx1] as char);
+                result.push(BASE64_CHARS[idx2] as char);
+                result.push(BASE64_CHARS[idx3] as char);
+                result.push(BASE64_CHARS[idx4] as char);
+            }
+            2 => {
+                let b1 = chunk[0] as u32;
+                let b2 = chunk[1] as u32;
+
+                let combined = (b1 << 16) | (b2 << 8);
+
+                let idx1 = ((combined >> 18) & 0x3F) as usize;
+                let idx2 = ((combined >> 12) & 0x3F) as usize; 
+                let idx3 = ((combined >> 6) & 0x3F) as usize;
+
+                result.push(BASE64_CHARS[idx1] as char);
+                result.push(BASE64_CHARS[idx2] as char);
+                result.push(BASE64_CHARS[idx3] as char);
+                result.push('=');
+            }
+            1 => {
+                let b1 = chunk[0] as u32;
+
+                let combined = b1 << 16;
+
+                let idx1 = ((combined >> 18) & 0x3F) as usize;
+                let idx2 = ((combined >> 12) & 0x3F) as usize;
+
+                result.push(BASE64_CHARS[idx1] as char);
+                result.push(BASE64_CHARS[idx2] as char);
+                result.push('=');
+                result.push('=');
+            }
+            _ => {
+                unreachable!();
+            }
+        }
+    }
+
+    result
+}
+
+pub fn from_base64(base64: &str) -> Result<Vec<u8>, SerializeError> {
+    todo!("Implement base64 decoding from scratch")
 }

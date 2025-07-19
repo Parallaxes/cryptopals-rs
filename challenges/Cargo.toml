@@ -4,4 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-serialize = "../serialize"
+colored = "3.0.0"
+
+[dependencies.serialize]
+path = "../serialize"
+
+[dependencies.xor]
+path = "../xor"

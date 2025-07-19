@@ -3,13 +3,14 @@ mod challenges;
 use challenges::set1;
 
 use std::env;
+use colored::Colorize;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() != 3 {
         eprintln!("Usage: {} <set> <challenge>", args[0]);
-        eprintln!("Example: {} 1 1");
+        eprintln!("Example: {} 1 1", args[0]);
         std::process::exit(1);
     }
 
@@ -17,7 +18,7 @@ fn main() {
     let challenge = &args[2];
 
     match (set.as_str(), challenge.as_str()) {
-        ("1", "1") => run_challenge("Set 1, Challenge 01", set1::challenge01::run()),
+        ("1", "1") => run_challenge("Set 1, Challenge 01", || set1::challenge01::run()),
         _ => {
             eprintln!("Unknown challenge: Set {} Challenge {}", set, challenge);
             eprintln!("Available challenges:");
@@ -33,9 +34,9 @@ where
 {
     print!("{}: ", name);
     if challenge_fn() {
-        println!("✓ PASS");
+        println!("{}", "✓ PASS".green());
     } else {
-        println!("✗ FAIL");
+        println!("{}", "✗ FAIL".red());
         std::process::exit(1);
     }
 }

@@ -6,6 +6,10 @@ pub trait Serialize {
         where Self: Sized;
 }
 
+pub trait FromHex {
+    fn from_hex(&self) -> Vec<u8>;
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum SerializeError {
     InvalidLength,

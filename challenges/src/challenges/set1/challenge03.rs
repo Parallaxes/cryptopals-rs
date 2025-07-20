@@ -42,7 +42,7 @@ fn solve(hex_input: &str) -> Result<u8, Box<dyn std::error::Error>> {
     Ok(*best_key)
 }
 
-fn score(bytes: &[u8]) -> f32 {
+pub fn score(bytes: &[u8]) -> f32 {
     let mut score = 0.0;
     let mut printable_cnt = 0;
 

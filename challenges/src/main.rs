@@ -20,6 +20,7 @@ fn main() {
     match (set.as_str(), challenge.as_str()) {
         ("1", "1") => run_challenge("Set 1, Challenge 01", || set1::challenge01::run()),
         ("1", "2") => run_challenge("Set 1, Challenge 02", || set1::challenge02::run()),
+        ("1", "3") => run_challenge("Set 1, Challenge 03", || set1::challenge03::run()),
         _ => {
             eprintln!("Unknown challenge: Set {} Challenge {}", set, challenge);
             eprintln!("Available challenges:");

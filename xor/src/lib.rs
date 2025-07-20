@@ -22,3 +22,7 @@ pub fn fixed_xor(a: &[u8], b: &[u8]) -> Result<Vec<u8>, XorError> {
 
     Ok(a.iter().zip(b.iter()).map(|(x, y)| x ^ y).collect())
 }
+
+pub fn single_byte_xor(data: &[u8], key: u8) -> Vec<u8> {
+    data.iter().map(|b| b ^ key).collect()
+}

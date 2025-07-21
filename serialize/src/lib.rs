@@ -111,5 +111,11 @@ pub fn to_base64(bytes: &[u8]) -> String {
 }
 
 pub fn from_base64(base64: &str) -> Result<Vec<u8>, SerializeError> {
-    todo!("Implement base64 decoding from scratch")
+    let mut result = String::new();
+
+    for chunk in base64.as_bytes().chunks(3) {
+        todo!()
+    }
+
+    todo!()
 }

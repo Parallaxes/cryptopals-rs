@@ -13,7 +13,7 @@ pub fn run() -> bool {
 }
 
 fn solve(a: &str, b: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let bytes_a = from_hex(a)?;
+    let bytes_a = from_hex(a)?; // APC, both inputs are a hex strs
     let bytes_b = from_hex(b)?;
     let xor_result = fixed_xor(&bytes_a, &bytes_b)?;
     Ok(to_hex(&xor_result))

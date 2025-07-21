@@ -26,3 +26,14 @@ pub fn fixed_xor(a: &[u8], b: &[u8]) -> Result<Vec<u8>, XorError> {
 pub fn single_byte_xor(data: &[u8], key: u8) -> Vec<u8> {
     data.iter().map(|b| b ^ key).collect()
 }
+
+pub fn repeating_key_xor(data: &[u8], key: &[u8]) -> Vec<u8> {
+    if key.is_empty() {
+        return data.to_vec();
+    }
+
+    data.iter()
+        .zip(key.iter().cycle())
+        .map(|(data_byte, key_byte)| data_byte ^ key_byte)
+        .collect()
+}

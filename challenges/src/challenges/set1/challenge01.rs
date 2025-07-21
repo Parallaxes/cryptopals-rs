@@ -11,6 +11,6 @@ pub fn run() -> bool {
 }
 
 fn solve(input: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let bytes = from_hex(input)?;
+    let bytes = from_hex(input)?; // APC, input is a hex str
     Ok(to_base64(&bytes))
 }

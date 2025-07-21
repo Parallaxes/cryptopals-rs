@@ -29,7 +29,7 @@ pub fn run() -> bool {
 
 fn solve(hex_input: &str) -> Result<u8, Box<dyn std::error::Error>> {
     let mut scores: Vec<(u8, f32)> = Vec::new();
-    let bytes = from_hex(hex_input)?;
+    let bytes = from_hex(hex_input)?; // APC, input is a hex str
 
     for key in 0..=255 {
         let buffer: Vec<u8> = single_byte_xor(&bytes, key);

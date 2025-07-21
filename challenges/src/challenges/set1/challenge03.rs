@@ -44,36 +44,45 @@ fn solve(hex_input: &str) -> Result<u8, Box<dyn std::error::Error>> {
 
 pub fn score(bytes: &[u8]) -> f32 {
     let mut score = 0.0;
-    let mut printable_cnt = 0;
+    let mut printable_count = 0;
+    let mut letter_count = 0;
 
     for &byte in bytes {
         match byte {
-            // ASCII chars -> use freq analysis
-            b'a'..=b'z' | b'A'..b'Z' => {
-                printable_cnt += 1;
-                let c = (byte | 0x20) as char;
+            // Letters - use frequency analysis
+            b'a'..=b'z' | b'A'..=b'Z' => {
+                printable_count += 1;
+                letter_count += 1;
+                let c = (byte | 0x20) as char; // Convert to lowercase
                 score += ENGLISH_FREQUENCIES.iter()
                     .find(|(ch, _)| *ch == c)
                     .map(|(_, freq)| *freq)
                     .unwrap_or(0.5);
             }
-            // Common punctuation and whitespace
-            b' ' => { score += 13.0; printable_cnt += 1; }
-            b'.' | b',' | b'!' | b'?' | b';' | b':' | b'\'' | b'"' => {
+            // Space is very common in English
+            b' ' => { 
+                score += 12.0; 
+                printable_count += 1; 
+            }
+            // Common punctuation
+            b'.' | b',' | b'!' | b'?' | b';' | b':' | b'\'' | b'"' | b'\n' | b'\r' => {
                 score += 0.5; 
-                printable_cnt += 1;
+                printable_count += 1;
             }
             // Other printable ASCII
             0x20..=0x7E => {
                 score += 0.1;
-                printable_cnt += 1;
+                printable_count += 1;
             }
-            // Not printable -> penalty
-            _ => score -= 1.0,
+            // Non-printable - smaller penalty
+            _ => score -= 10.0,
         }
     }
 
-    // Heavily weight ratio of printable chars
-    let printable_ratio = printable_cnt as f32 / bytes.len() as f32;
-    score * printable_ratio * printable_ratio
+    // Bonus for high ratio of printable characters
+    let printable_ratio = printable_count as f32 / bytes.len() as f32;
+    let letter_ratio = letter_count as f32 / bytes.len() as f32;
+    
+    // Combine the scores
+    score * printable_ratio + letter_ratio * 10.0
 }

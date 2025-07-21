@@ -111,11 +111,56 @@ pub fn to_base64(bytes: &[u8]) -> String {
 }
 
 pub fn from_base64(base64: &str) -> Result<Vec<u8>, SerializeError> {
-    let mut result = String::new();
+    let clean_input: String = base64.chars()
+        .filter(|c| !c.is_whitespace())
+        .collect();
 
-    for chunk in base64.as_bytes().chunks(3) {
-        todo!()
+    let mut result = Vec::new();
+
+    for chunk in clean_input.as_bytes().chunks(4) {
+        match chunk.len() {
+            4 => {
+                // Convert each base64 char to its 6-bit value
+                let v1 = char_to_base64_value(chunk[0] as char)?;
+                let v2 = char_to_base64_value(chunk[1] as char)?;
+                let v3 = char_to_base64_value(chunk[2] as char)?;
+                let v4 = char_to_base64_value(chunk[3] as char)?;
+
+                // Pack four 6-bit values into 24 bits
+                let combined = (v1 << 18) | (v2 << 12) | (v3 << 6) | v4;
+
+                // Extract 3 bytes
+                let b1 = ((combined >> 16) & 0xFF) as u8;
+                let b2 = ((combined >> 8) & 0xFF) as u8;
+                let b3 = (combined & 0xFF) as u8;
+
+                // Handle padding
+                if chunk[3] == b'=' && chunk[2] == b'=' {
+                    result.push(b1);
+                } else if chunk[3] == b'=' {
+                    result.push(b1);
+                    result.push(b2);
+                } else {
+                    result.push(b1);
+                    result.push(b2);
+                    result.push(b3);
+                }
+            }
+        _ => return Err(SerializeError::InvalidLength),
+        }
     }
 
-    todo!()
+    Ok(result)
+}
+
+fn char_to_base64_value(c: char) -> Result<u32, SerializeError> {
+    match c {
+        'A'..='Z' => Ok((c as u32) - ('A' as u32)),
+        'a'..='z' => Ok((c as u32) - ('a' as u32) + 26),
+        '0'..='9' => Ok((c as u32) - ('0' as u32) + 52),
+        '+' => Ok(62),
+        '/' => Ok(63),
+        '=' => Ok(0), // Padding - value doesn't matter
+        _ => Err(SerializeError::InvalidData(format!("Invalid Base64 character: {}", c))),
+    }
 }

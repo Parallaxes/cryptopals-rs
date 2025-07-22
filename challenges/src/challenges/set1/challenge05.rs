@@ -12,7 +12,10 @@ pub fn run() -> bool {
             dbg!(&result_hex);
             result_hex == EXPECTED
         }
-        Err(_) => false,
+        Err(e) => {
+            eprintln!("Error: {:?}", e);
+            false
+        },
     }
 }
 

@@ -1,3 +1,5 @@
+use std::fs;
+
 const BASE64_CHARS: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 pub trait Serialize {
@@ -163,4 +165,10 @@ fn char_to_base64_value(c: char) -> Result<u32, SerializeError> {
         '=' => Ok(0), // Padding - value doesn't matter
         _ => Err(SerializeError::InvalidData(format!("Invalid Base64 character: {}", c))),
     }
+}
+
+pub fn from_base64_file(path: &str) -> Result<Vec<u8>, SerializeError> {
+    let base64_content = fs::read_to_string(path).map_err(|_| SerializeError::InvalidFormat)?;
+    let bytes = from_base64(&base64_content)?;
+    Ok(bytes)
 }

@@ -1,20 +1,17 @@
-use serialize::from_base64;
+use serialize::from_base64_file;
 use xor::{repeating_key_xor, single_byte_xor};
 use super::challenge03::score;
 
 pub fn run() -> bool {
-    let input = std::fs::read_to_string("data/set01/challenge06.txt")
-        .expect("Failed to read file");
+    let input = match from_base64_file("data/set01/challenge06.txt") {
+        Ok(content) => content,
+        Err(_) => return false,
+    };
     static EXPECTED: &str = "Terminator X: Bring the noise";
 
-    let clean_input: String = input.chars()
-        .filter(|c| !c.is_whitespace())
-        .collect();
-
-    match solve(&clean_input) {
+    match solve(&input) {
         Ok(result) => {
-            let ciphertext = from_base64(&clean_input).expect("Failed to decode base64");
-            let decrypted = repeating_key_xor(&ciphertext, &result);
+            let decrypted = repeating_key_xor(&input, &result);
             let key = String::from_utf8_lossy(&result);
 
             dbg!(&key);
@@ -22,13 +19,15 @@ pub fn run() -> bool {
 
             key == EXPECTED
         }
-        Err(_) => false,
+        Err(e) => {
+            eprintln!("Error: {:?}", e);
+            false
+        },
     }
 }
 
-fn solve(clean_base64: &str) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
-    let ciphertext = from_base64(clean_base64)?;
-    let candidates = find_best_keysizes(&ciphertext, 3);
+fn solve(ciphertext: &[u8]) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    let candidates = find_best_keysizes(ciphertext, 3);
 
     // Try each keysize and find best size overall
     candidates

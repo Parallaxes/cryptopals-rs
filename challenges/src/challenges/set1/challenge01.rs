@@ -6,7 +6,10 @@ pub fn run() -> bool {
 
     match solve(INPUT) {
         Ok(result) => result == EXPECTED,
-        Err(_) => false,
+        Err(e) => {
+            eprintln!("Error: {:?}", e);
+            false
+        },
     }
 }
 

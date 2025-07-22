@@ -1,5 +1,7 @@
 [workspace]
 members = [
     'serialize',
-    'challenges', "xor",
+    'challenges',
+    "xor",
+    "crypto",
 ]

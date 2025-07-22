@@ -11,3 +11,6 @@ path = "../serialize"
 
 [dependencies.xor]
 path = "../xor"
+
+[dependencies.crypto]
+path = "../crypto"

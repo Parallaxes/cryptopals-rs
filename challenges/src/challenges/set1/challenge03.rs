@@ -23,7 +23,10 @@ pub fn run() -> bool {
             dbg!(String::from_utf8_lossy(&single_byte_xor(&bytes, result)));
             result as char == EXPECTED
         },
-        Err(_) => false, 
+        Err(e) => {
+            eprintln!("Error: {:?}", e);
+            false
+        },
     }
 }
 

@@ -7,12 +7,14 @@ pub fn run() -> bool {
         Err(_) => return false,
     };
     static KEY: &[u8] = b"YELLOW SUBMARINE";
+    static EXPECTED: &str = "I'm back and I'm ringin' the bell \n";
 
     match solve(&input, KEY) {
         Ok(result) => {
             let plaintext = String::from_utf8_lossy(&result);
+            let first_line = plaintext.lines().next().unwrap_or("").to_string() + "\n";
             dbg!(plaintext);
-            true
+            first_line == EXPECTED
         }
         Err(e) => {
             eprintln!("Error: {:?}", e);

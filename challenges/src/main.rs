@@ -26,6 +26,7 @@ fn main() {
         "5" => run_challenge("Set 1, Challenge 05", || set1::challenge05::run()),
         "6" => run_challenge("Set 1, Challenge 06", || set1::challenge06::run()),
         "7" => run_challenge("Set 1, Challenge 07", || set1::challenge07::run()),
+        "8" => run_challenge("Set 1, Challenge 08", || set1::challenge08::run()),
 
         // Set 2
         "9" => run_challenge("Set 2, Challenge 07",  || set2::challenge09::run()),

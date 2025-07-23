@@ -5,6 +5,9 @@ use challenges::set2;
 
 use std::env;
 use colored::Colorize;
+use std::io::{self, Write};
+use std::process::{Command, Stdio};
+
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -18,6 +21,8 @@ fn main() {
     let challenge = &args[1];
 
     match challenge.as_str() {
+        "0" => run_all_challenges_quiet(),
+
         // Set 1
         "1" => run_challenge("Set 1, Challenge 01", || set1::challenge01::run()),
         "2" => run_challenge("Set 1, Challenge 02", || set1::challenge02::run()),
@@ -29,7 +34,9 @@ fn main() {
         "8" => run_challenge("Set 1, Challenge 08", || set1::challenge08::run()),
 
         // Set 2
-        "9" => run_challenge("Set 2, Challenge 07",  || set2::challenge09::run()),
+        "9" => run_challenge("Set 2, Challenge 09",  || set2::challenge09::run()),
+        "10" => run_challenge("Set 2, Challenge 10", || set2::challenge10::run()),
+
         _ => {
             eprintln!("Unknown challenge: Challenge {}", challenge);
             eprintln!("Available challenges:");
@@ -48,6 +55,53 @@ where
         println!("{}", "✓ PASS".green());
     } else {
         println!("{}", "✗ FAIL".red());
+        std::process::exit(1);
+    }
+}
+
+fn run_all_challenges_quiet() {
+    let challenges = vec![
+        ("Set 1, Challenge 01", "1"),
+        ("Set 1, Challenge 02", "2"),
+        ("Set 1, Challenge 03", "3"),
+        ("Set 1, Challenge 04", "4"),
+        ("Set 1, Challenge 05", "5"),
+        ("Set 1, Challenge 06", "6"),
+        ("Set 1, Challenge 07", "7"),
+        ("Set 1, Challenge 08", "8"),
+        ("Set 2, Challenge 09", "9"),
+    ];
+
+    let mut passed = 0;
+    let mut failed = 0;
+
+    for (name, challenge_num) in challenges {
+        print!("{}: ", name);
+        io::stdout().flush().unwrap();
+        
+        // Run the challenge as a subprocess with suppressed output
+        let output = Command::new(env::current_exe().unwrap())
+            .arg(challenge_num)
+            .stdout(Stdio::null())  // Suppress stdout
+            .stderr(Stdio::null())  // Suppress stderr
+            .status()
+            .expect("Failed to run challenge");
+
+        if output.success() {
+            println!("{}", "✓ PASS".green());
+            passed += 1;
+        } else {
+            println!("{}", "✗ FAIL".red());
+            failed += 1;
+        }
+    }
+
+    println!("\n{}: {} passed, {} failed", 
+             "Summary".bold(), 
+             passed.to_string().green(), 
+             failed.to_string().red());
+
+    if failed > 0 {
         std::process::exit(1);
     }
 }

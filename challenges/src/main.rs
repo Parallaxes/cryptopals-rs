@@ -36,6 +36,7 @@ fn main() {
         // Set 2
         "9" => run_challenge("Set 2, Challenge 09",  || set2::challenge09::run()),
         "10" => run_challenge("Set 2, Challenge 10", || set2::challenge10::run()),
+        "10" => run_challenge("Set 2, Challenge 11", || set2::challenge11::run()),
 
         _ => {
             eprintln!("Unknown challenge: Challenge {}", challenge);
@@ -71,6 +72,7 @@ fn run_all_challenges_quiet() {
         ("Set 1, Challenge 08", "8"),
         ("Set 2, Challenge 09", "9"),
         ("Set 2, Challenge 10", "10"),
+        ("Set 2, Challenge 11", "11"),
     ];
 
     let mut passed = 0;

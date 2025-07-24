@@ -1,4 +1,4 @@
-use crypto::pkcs7_pad;
+use crypto::aes::padding::pkcs7_pad;
 
 pub fn run() -> bool {
     static INPUT: &str = "YELLOW SUBMARINE";

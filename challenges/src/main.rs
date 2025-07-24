@@ -70,6 +70,7 @@ fn run_all_challenges_quiet() {
         ("Set 1, Challenge 07", "7"),
         ("Set 1, Challenge 08", "8"),
         ("Set 2, Challenge 09", "9"),
+        ("Set 2, Challenge 10", "10"),
     ];
 
     let mut passed = 0;

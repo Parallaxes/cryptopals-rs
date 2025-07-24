@@ -5,3 +5,6 @@ edition = "2024"
 
 [dependencies]
 aes = "0.8.4"
+
+[dependencies.xor]
+path = "../xor"

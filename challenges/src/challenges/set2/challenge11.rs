@@ -4,8 +4,6 @@ use rand::{rng, Rng};
 use crypto::aes::AES128_BLOCK_SIZE;
 
 use std::collections::HashSet;
-use std::hash::Hash;
-
 
 pub fn run() -> bool {
     match solve() {

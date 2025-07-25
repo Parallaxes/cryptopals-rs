@@ -36,7 +36,7 @@ fn main() {
         // Set 2
         "9" => run_challenge("Set 2, Challenge 09",  || set2::challenge09::run()),
         "10" => run_challenge("Set 2, Challenge 10", || set2::challenge10::run()),
-        "10" => run_challenge("Set 2, Challenge 11", || set2::challenge11::run()),
+        "11" => run_challenge("Set 2, Challenge 11", || set2::challenge11::run()),
 
         _ => {
             eprintln!("Unknown challenge: Challenge {}", challenge);

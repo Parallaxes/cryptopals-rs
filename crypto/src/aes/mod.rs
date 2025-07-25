@@ -8,7 +8,7 @@ use crate::common::AesError;
 
 pub use padding::{pkcs7_pad, pkcs7_unpad};
 
-const AES128_BLOCK_SIZE: usize = 16;
+pub const AES128_BLOCK_SIZE: usize = 16;
 
 #[derive(Debug, Clone)]
 pub enum AesMode {
